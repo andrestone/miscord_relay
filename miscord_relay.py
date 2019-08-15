@@ -5,9 +5,11 @@ import discord
 from discord import utils
 import re
 from tinydb import TinyDB, Query
+from datetime import datetime
 
 TOKEN_PATH = [d for d in os.listdir() if "TOKEN" in d]
 TOKEN = TOKEN_PATH[0].replace("TOKEN", "")
+
 client = discord.Client()
 
 db = TinyDB('./db.json')
@@ -66,9 +68,11 @@ async def on_message(message):
                                                                                             "").lower() == tag.replace(
                         "@", "").lower():
                     user = client.get_user(item['id'])
-                    print("Poking " + tag.replace("@", "") + "!")
+                    print(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - Poking " + tag.replace("@", "") + "!")
                     await user.send(user.mention + '\n' + message.content, embed=message.embeds[0])
                     poked = True
+                else:
+                    print('User ' + tag + ' not found.')
             # if '@FORCE' in tags and not poked:
             if not poked:
                 members = message.guild.members  # get_member_named(tag.replace("@",""))
@@ -102,7 +106,7 @@ async def on_message(message):
                     elif m.created_at > user.created_at:
                         user = m
                 if user:
-                    print("Poking " + tag.replace("@", "") + " (" + user.name + ")" + "!")
+                    print(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - Poking " + tag.replace("@", "") + " (" + user.name + ")" + "!")
                     await user.send(user.mention + '\n' + message.content, embed=message.embeds[0])
 
 
