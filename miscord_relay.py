@@ -10,7 +10,14 @@ from datetime import datetime
 TOKEN_PATH = [d for d in os.listdir() if "TOKEN" in d]
 TOKEN = TOKEN_PATH[0].replace("TOKEN", "")
 
-client = discord.Client()
+try:
+
+    intents = discord.Intents.default()
+    intents.members = True
+    client = discord.Client(intents=intents)
+except Exception as err:
+    print(err)
+    os.exit(-1)
 
 db = TinyDB('./db.json')
 User = Query()
@@ -76,6 +83,7 @@ async def on_message(message):
             # if '@FORCE' in tags and not poked:
             if not poked:
                 members = message.guild.members  # get_member_named(tag.replace("@",""))
+                print("Total members: " + (str)(len(members)))
                 found = []
                 for m in members:
                     r = False
